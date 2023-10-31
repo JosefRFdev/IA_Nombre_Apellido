@@ -1,12 +1,22 @@
+from flask import Flask, render_template, request
 import openai
 import os
 from dotenv import load_dotenv
 
 load_dotenv("environment.env")
-print(os.getenv("OPENAI_API_KEY"))
-
-
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/detectar', methods=['POST'])
+def detectar():
+    palabra = request.form['palabra']
+    resultado = detectar_nombre_o_apellido(palabra)
+    return render_template('result.html', palabra=palabra, resultado=resultado)
 
 def detectar_nombre_o_apellido(palabra):
     response = openai.ChatCompletion.create(
@@ -23,9 +33,8 @@ def detectar_nombre_o_apellido(palabra):
         ]
     )
 
-    
     respuesta = response['choices'][0]['message']['content'].strip().lower()
-    
+
     if "first name" in respuesta:
         return "Nombre"
     elif "surname" in respuesta:
@@ -33,6 +42,5 @@ def detectar_nombre_o_apellido(palabra):
     else:
         return "Indeterminado"
 
-palabra = input("Introduce una palabra: ")
-resultado = detectar_nombre_o_apellido(palabra)
-print(f"La palabra '{palabra}' es un: {resultado}")
+if __name__ == "__main__":
+    app.run(debug=True)

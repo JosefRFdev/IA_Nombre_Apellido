@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detector de Nombres y Apellidos</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="background-shapes">
+        <video autoplay loop muted>
+            <source src="{{ url_for('static', filename='background.mp4') }}" type="video/mp4">
+        </video>
+    </div>
+    <div class="container">
+        <form action="/detectar" method="post" class="form-container">
+            <label for="palabra">Introduce una palabra:</label>
+            <input type="text" name="palabra" required>
+            <input type="submit" value="Detectar">
+        </form>
+    </div>
+</body>
+</html>
